@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<section id="todoapp">
+    <header class="header">
+        <h1>小周记事本</h1>
+
+        <div class="aligntxt">
+            <input v-model="inputValue" type="text" autofocus="autofocus" @keyup.enter="add" autocomplete="off"
+                   placeholder="       准备干什么呢..." class="new-todo">
+            <!--         <span class="t"></span>-->
+        </div>
+    </header>
+    <section class="main">
+        <section>
+            <div class="listalign">
+                <ul>
+                    <li class="todo" v-for="(item,index) in list">
+                        <div class="doalign">
+                            <span class="index">  {{index + 1}}. </span>
+                            <div style="width:140px; display: inline-block">
+                                <div class="todolabel"> {{item}}</div>
+                            </div>
+                            <button class="destroy" name="destroy" @click="remove(index)"></button>
+                        </div>
+
+
+                    </li>
+                </ul>
+            </div>
+            <div class="footeralign">
+                <footer class="footer" v-if="list.length!=0">
+                    <p class="todo-cnt">
+                        还有{{list.length}}项没有做哦
+                    </p>
+                    <div class="buttonalign">
+                        <button class="clearnow" @click="clearnow">clear</button>
+                    </div>
+                </footer>
+            </div>
+            <footer class="info">
+            </footer>
+        </section>
+    </section>
+</section>
+
+<script>
+  var app = new Vue({
+    el: '#todoapp',
+    data: {
+      list: ['写代码', '睡觉觉', '吃饭饭'],
+      inputValue: ''
+    },
+    methods: {
+      add: function () {
+        /* if(this.inputValue.length>=7){
+         this.inputValue = this.inputValue.substr(0, 7);
+         this.inputValue=this.inputValue+"..."
+
+         this.list.push(this.inputValue);}
+         else*/
+        this.list.push(this.inputValue);
+        //storage.set("todolist",this.list)
+         localStorage.setItem('todolist', JSON.stringify(this.list))
+        this.inputValue = ""
+      },
+      remove: function (index) {
+        this.list.splice(index, 1)
+        //storage.remove("todolist",this.list)
+        localStorage.removeItem('todolist', JSON.stringify(this.list))
+      },
+      clearnow: function () {
+        this.list = []
+      },
+    },
+    mounted () {
+      let todolist = JSON.parse(localStorage.getItem('todolist'))
+      //let todolist = storage.get("todolist",this.list)
+      if (todolist) {
+        this.list = todolist
+      }
+      console.log('page will refresh when f5')
+    }
+  })
+
+
+
+</script>
+</body>
+</html>
